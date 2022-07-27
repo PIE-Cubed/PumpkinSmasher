@@ -20,6 +20,11 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  // obj
+  private Controls controls;
+  private Drive drive;
+  private Pneumatics pneumatics;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -29,6 +34,12 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    // inst
+    controls = new Controls();
+    drive = new Drive();
+    pneumatics = new Pneumatics();
+    
   }
 
   /**
@@ -78,7 +89,24 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    double leftPower = controls.getLeftMotorPower();
+    double rightPower = controls.getRightMotorPower();
+    boolean deployState = controls.deployPlateCylinder();
+    boolean retractState = controls.retractPlateCylinder();
+
+    // Toggles piston
+    if (deployState == true) {
+      pneumatics.extendPiston();
+    }
+    else if (retractState == true) {
+      pneumatics.retractPiston();
+    }
+
+    // Drives the robot
+    drive.drive(leftPower, rightPower);
+
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
