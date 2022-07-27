@@ -22,4 +22,15 @@ public class Drive {
     public void drive(double leftPower, double rightPower)  {
         diffDrive.tankDrive(leftPower, rightPower);
     }
+
+    // Test functions
+    public void testLeftSide(double leftPower) {
+        drive(leftPower, 0);
+    }
+
+    public void testRightSide(double rightPower) {
+        drive(0, rightPower);
+    }
+
 }
+
