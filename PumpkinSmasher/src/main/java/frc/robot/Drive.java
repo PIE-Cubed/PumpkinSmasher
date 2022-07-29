@@ -18,9 +18,10 @@ public class Drive {
         diffDrive = new DifferentialDrive(leftMotorController, rightMotorController);
     }
 
-    // Function for giving motors power
+    /* Function for giving motors power
+    negative power make left motor go forward, positive power for right*/
     public void drive(double leftPower, double rightPower)  {
-        diffDrive.tankDrive(leftPower, rightPower);
+        diffDrive.tankDrive(-1 * leftPower, rightPower);
     }
 
     // Test functions

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 public class Pneumatics {
     // Constants
     private final int EXTEND_PISTON  = 0;
-    private final int RETRACT_PISTON = 1;
+    private final int RETRACT_PISTON = 3;
 
     // Object declaration
     private DoubleSolenoid doubleSolenoid;
