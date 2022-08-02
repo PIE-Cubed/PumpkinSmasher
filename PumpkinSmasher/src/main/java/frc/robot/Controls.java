@@ -23,6 +23,7 @@ public class Controls {
         return -1 * xbox.getRightY(); 
     }
 
+    /* left bumper deploys smasher plate */
     public boolean deployPlateCylinder() {
         boolean leftBump;
         boolean rightBump;
@@ -39,7 +40,9 @@ public class Controls {
             return false;
         }
     }
+    
 
+    /* right bumper retracts smasher plate */
     public boolean retractPlateCylinder() {
         boolean leftBump;
         boolean rightBump;
