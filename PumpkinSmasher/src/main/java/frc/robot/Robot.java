@@ -90,10 +90,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double leftPower = controls.getLeftMotorPower();
-    double rightPower = controls.getRightMotorPower();
-    boolean deployState = controls.deployPlateCylinder();
+    double leftPower     = controls.getLeftMotorPower();
+    double rightPower    = controls.getRightMotorPower();
+    boolean deployState  = controls.deployPlateCylinder();
     boolean retractState = controls.retractPlateCylinder();
+    boolean sirenState   = controls.getSirenEnabled();
 
     // Toggles piston
     if (deployState == true) {
@@ -105,6 +106,15 @@ public class Robot extends TimedRobot {
 
     // Drives the robot
     drive.drive(leftPower, rightPower);
+
+
+    // Control siren 
+    if (sirenState == true) {
+      pneumatics.sirenOn();
+    }
+    else {
+      pneumatics.sirenOff();
+    }
 
   }
 

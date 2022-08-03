@@ -59,4 +59,14 @@ public class Controls {
             return false;
         }
     }
+
+    /* return true if right trigger pressed */
+    public boolean getSirenEnabled() {
+        if (xbox.getRightTriggerAxis() >= .9) {
+            return true;
+        } 
+        else {
+            return false;
+        }
+    }
 }
