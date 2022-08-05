@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Pneumatics {
     // Constants
     private final int EXTEND_PISTON  = 0;
-    private final int RETRACT_PISTON = 5;
+    private final int RETRACT_PISTON = 1;
     private final int SIREN          = 2;
 
     // Object declaration

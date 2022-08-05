@@ -26,10 +26,11 @@ public class Controls {
     /* left bumper deploys smasher plate */
     public boolean deployPlateCylinder() {
         boolean leftBump;
+        
         boolean rightBump;
 
         leftBump  = xbox.getLeftBumperPressed();
-        rightBump = xbox.getRightBumperPressed();
+        rightBump = xbox.getRightBumper();
         if ((leftBump == true) && (rightBump == true)) {
             return false;
         }
@@ -47,7 +48,7 @@ public class Controls {
         boolean leftBump;
         boolean rightBump;
 
-        leftBump  = xbox.getLeftBumperPressed();
+        leftBump  = xbox.getLeftBumper();
         rightBump = xbox.getRightBumperPressed();
         if ((leftBump == true) && (rightBump == true)) {
             return false;
