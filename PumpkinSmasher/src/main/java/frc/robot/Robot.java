@@ -25,6 +25,10 @@ public class Robot extends TimedRobot {
   private Drive drive;
   private Pneumatics pneumatics;
 
+  // Constants
+  public static final int CONT = 0;
+  public static final int DONE = 1;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
