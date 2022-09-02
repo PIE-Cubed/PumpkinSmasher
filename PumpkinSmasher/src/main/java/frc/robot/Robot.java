@@ -24,10 +24,22 @@ public class Robot extends TimedRobot {
   private Controls controls;
   private Drive drive;
   private Pneumatics pneumatics;
+  private Auto auto;
 
   // Constants
   public static final int CONT = 0;
   public static final int DONE = 1;
+
+  // Variables
+  private int status = CONT;
+
+  // Enumeration for drive methods
+  private enum DriveState {
+    AUTO_STATE,
+    TELEOP_STATE;
+  }
+
+  private DriveState driveState = DriveState.TELEOP_STATE;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -43,7 +55,7 @@ public class Robot extends TimedRobot {
     controls = new Controls();
     drive = new Drive();
     pneumatics = new Pneumatics();
-    
+    auto = new Auto();
   }
 
   /**
@@ -76,6 +88,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    if (status == CONT) {
+      status = auto.myAuto(drive, pneumatics);
+    }
+    else {
+      drive.drive(0, 0);
+    }
+    /*
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
@@ -84,7 +103,7 @@ public class Robot extends TimedRobot {
       default:
         // Put default auto code here
         break;
-    }
+    }*/
   }
 
   /** This function is called once when teleop is enabled. */
@@ -94,32 +113,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double leftPower     = controls.getLeftMotorPower();
-    double rightPower    = controls.getRightMotorPower();
-    boolean deployState  = controls.deployPlateCylinder();
-    boolean retractState = controls.retractPlateCylinder();
-    boolean sirenState   = controls.getSirenEnabled();
-
-    // Toggles piston
-    if (deployState == true) {
-      pneumatics.extendPiston();
-    }
-    else if (retractState == true) {
-      pneumatics.retractPiston();
-    }
-
-    // Drives the robot
-    drive.drive(leftPower, rightPower);
-
-
-    // Control siren 
-    if (sirenState == true) {
-      pneumatics.sirenOn();
-    }
-    else {
-      pneumatics.sirenOff();
-    }
-
+    wheelControl();
+    pneumaticsControl();
   }
 
   /** This function is called once when the robot is disabled. */
@@ -137,4 +132,64 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  // Controls the driving portion of teleop
+  private void wheelControl() {
+    if (driveState == DriveState.TELEOP_STATE) {
+      // Input
+      double leftPower     = controls.getLeftMotorPower();
+      double rightPower    = controls.getRightMotorPower();
+      boolean startAuto    = controls.startDriveAuto();
+  
+      // Next state
+      if (startAuto == true) {
+        driveState = DriveState.AUTO_STATE;
+      }
+      else if (startAuto == false) {
+        driveState = DriveState.TELEOP_STATE;
+      }
+
+      // Action
+      drive.drive(leftPower, rightPower);
+    }
+    else if (driveState == DriveState.AUTO_STATE) {
+      // Input and action
+      int driveStatus = auto.myAuto(drive, pneumatics);
+
+      // Next state
+      if (driveStatus == DONE) {
+        driveState = DriveState.TELEOP_STATE;
+      }
+      else if (driveStatus == CONT) {
+        driveState = DriveState.AUTO_STATE;
+      }
+      else {
+        driveState = DriveState.TELEOP_STATE;
+      }
+    }
+    
+  }
+
+  // Controls the pneumatics during teleop
+  private void pneumaticsControl() {
+    boolean deployState  = controls.deployPlateCylinder();
+    boolean retractState = controls.retractPlateCylinder();
+    boolean sirenState   = controls.getSirenEnabled();
+
+    // Toggles piston
+    if (deployState == true) {
+      pneumatics.extendPiston();
+    }
+    else if (retractState == true) {
+      pneumatics.retractPiston();
+    }
+
+    // Control siren 
+    if (sirenState == true) {
+      pneumatics.sirenOn();
+    }
+    else {
+      pneumatics.sirenOff();
+    }
+  }
 }

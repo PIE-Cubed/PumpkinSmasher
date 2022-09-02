@@ -23,6 +23,11 @@ public class Controls {
         return -1 * xbox.getRightY(); 
     }
 
+    // Runs auto routine during teleop mode
+    public boolean startDriveAuto() {
+        return xbox.getAButton();
+    }
+
     /* left bumper deploys smasher plate */
     public boolean deployPlateCylinder() {
         boolean leftBump;

@@ -43,12 +43,14 @@ public class Drive {
             driveFinalMilliSeconds = initMilliSeconds + (long) (seconds * 1000);
         }
 
+        System.out.println("Drive power: " + power);
         drive(power, power);
 
         // Returns values to signify when to move to the next step
         if (System.currentTimeMillis() > driveFinalMilliSeconds) {
             // Resets driveFirstTime so it can be used for the next call
             driveFirstTime = true;
+            drive(0, 0);
             return Robot.DONE;
         }
         else {
@@ -57,7 +59,7 @@ public class Drive {
     }
 
     // Rotates for a set time at a set power
-    // Positive power is clockwise
+    // Positive rotate power makes left motor go forward and right motor go backwards - clockwise
     public int auto_rotate(double seconds, double power) {
         // Ran the first time to initialize values
         if (rotateFirstTime == true) {
@@ -72,6 +74,7 @@ public class Drive {
         if (System.currentTimeMillis() > rotateFinalMilliSeconds) {
             // Resets rotateFirstTime so it can be used for the next call
             rotateFirstTime = true;
+            drive(0, 0);
             return Robot.DONE;
         }
         else {
