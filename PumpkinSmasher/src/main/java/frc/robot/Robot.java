@@ -140,7 +140,7 @@ public class Robot extends TimedRobot {
       double leftPower     = controls.getLeftMotorPower();
       double rightPower    = controls.getRightMotorPower();
       boolean startAuto    = controls.startDriveAuto();
-  
+    
       // Next state
       if (startAuto == true) {
         driveState = DriveState.AUTO_STATE;
@@ -155,9 +155,14 @@ public class Robot extends TimedRobot {
     else if (driveState == DriveState.AUTO_STATE) {
       // Input and action
       int driveStatus = auto.myAuto(drive, pneumatics);
+      boolean startButton = controls.autoKill();
 
       // Next state
       if (driveStatus == DONE) {
+        driveState = DriveState.TELEOP_STATE;
+      }
+      else if (startButton == true ){
+        auto.reset(drive);
         driveState = DriveState.TELEOP_STATE;
       }
       else if (driveStatus == CONT) {

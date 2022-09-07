@@ -39,4 +39,12 @@ public class Auto {
 
         return Robot.CONT;
     }
+    
+    // Function to Reset Variables
+    public void reset(Drive drive){
+        firstTime = true;
+        step = 1;
+        drive.drive(0,0);
+    }
+
 }

@@ -75,4 +75,16 @@ public class Controls {
             return false;
         }
     }
+
+    // Killswitch for Auto 
+    public boolean autoKill() {
+        boolean startButton;
+        startButton = xbox.getStartButtonPressed();
+        if (startButton == true){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
