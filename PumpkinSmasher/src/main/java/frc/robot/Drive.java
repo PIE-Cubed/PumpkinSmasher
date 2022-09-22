@@ -3,7 +3,7 @@ package frc.robot;
 // Imports
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
-
+import edu.wpi.first.math.controller.PIDController;
 
 public class Drive {
     // Declaring objects
@@ -18,6 +18,14 @@ public class Drive {
     // Auto rotate variables
     private boolean rotateFirstTime;
     private long rotateFinalMilliSeconds = 0;
+
+    //Constants
+    private final double turnP = 0.03;
+    private final double turnI = 0.00;
+    private final double turnD = 0.00;
+
+    //PID Controller
+    private PIDController turnController = new PIDController(turnP, turnI, turnD);
 
     // Constructor to create drive object
     public Drive()  {
@@ -58,28 +66,19 @@ public class Drive {
         }
     }
 
-    // Rotates for a set time at a set power
-    // Positive rotate power makes left motor go forward and right motor go backwards - clockwise
-    public int auto_rotate(double seconds, double power) {
+    /* Rotates for a set time at a set power
+       Positive rotate power makes left motor go forward and right motor go backwards - clockwise
+       Degrees parameter is absolute - based on where robot started */
+    public int auto_rotate(double targetDegrees) {
         // Ran the first time to initialize values
         if (rotateFirstTime == true) {
             rotateFirstTime = false;
-            long initMilliSeconds = System.currentTimeMillis();
-            rotateFinalMilliSeconds = initMilliSeconds + (long) (seconds * 1000);
         }
+
+        double power = turnController.calculate(gyroAngle - targetDegrees);
 
         drive(power, -1 * power);
 
-        // Returns values to signify when to move to the next step
-        if (System.currentTimeMillis() > rotateFinalMilliSeconds) {
-            // Resets rotateFirstTime so it can be used for the next call
-            rotateFirstTime = true;
-            drive(0, 0);
-            return Robot.DONE;
-        }
-        else {
-            return Robot.CONT;
-        }
     }
 
 

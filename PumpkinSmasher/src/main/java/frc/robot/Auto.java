@@ -1,6 +1,7 @@
 package frc.robot;
 
 public class Auto {
+    // Variables
     private boolean firstTime;
     private int step;
 
