@@ -23,7 +23,7 @@ public class Drive {
     private boolean rotateFirstTime;
 
     // Constants
-    private final double turnP = 0.09;//0.09
+    private final double turnP = 0.15;//0.09
     private final double turnI = 0.00;
     private final double turnD = 0.00;
  
