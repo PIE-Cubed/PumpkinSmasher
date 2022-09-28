@@ -23,7 +23,7 @@ public class Auto {
                 status = drive.auto_drive(1, 0.5);
                 break;
             case 2:
-                status = drive.auto_rotate(1, 0.75);
+                status = drive.auto_rotate(90);
                 break;
             default:
                 drive.drive(0, 0);

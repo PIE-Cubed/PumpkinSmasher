@@ -3,7 +3,9 @@ package frc.robot;
 // Imports
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.SPI;
 
 public class Drive {
     // Declaring objects
@@ -11,27 +13,33 @@ public class Drive {
     private PWMTalonSRX rightMotorController;
     private DifferentialDrive diffDrive;
 
+    private AHRS ahrs;
+
     // Auto drive variables
     private boolean driveFirstTime;
     private long driveFinalMilliSeconds = 0;    
 
     // Auto rotate variables
     private boolean rotateFirstTime;
-    private long rotateFinalMilliSeconds = 0;
 
-    //Constants
-    private final double turnP = 0.03;
+    // Constants
+    private final double turnP = 0.09;//0.09
     private final double turnI = 0.00;
     private final double turnD = 0.00;
-
-    //PID Controller
-    private PIDController turnController = new PIDController(turnP, turnI, turnD);
+ 
+    // PID Controller
+    private PIDController turnController;
 
     // Constructor to create drive object
     public Drive()  {
+        ahrs = new AHRS(SPI.Port.kMXP);
         leftMotorController  = new PWMTalonSRX(2);
         rightMotorController = new PWMTalonSRX(1);
         diffDrive            = new DifferentialDrive(leftMotorController, rightMotorController);
+
+        turnController       = new PIDController(turnP, turnI, turnD);
+        turnController.setSetpoint(3);
+
         driveFirstTime  = true;
         rotateFirstTime = true;
     }
@@ -67,20 +75,24 @@ public class Drive {
     }
 
     /* Rotates for a set time at a set power
-       Positive rotate power makes left motor go forward and right motor go backwards - clockwise
-       Degrees parameter is absolute - based on where robot started */
-    public int auto_rotate(double targetDegrees) {
-        // Ran the first time to initialize values
-        if (rotateFirstTime == true) {
-            rotateFirstTime = false;
-        }
-
-        double power = turnController.calculate(gyroAngle - targetDegrees);
-
+     Positive rotate power makes left motor go forward and right motor go backwards - clockwise
+     Degreees parameter is absolute - based on where robot started */
+    public int auto_rotate(double targetDegrees) {       
+        double power = turnController.calculate(ahrs.getYaw() - targetDegrees);
         drive(power, -1 * power);
+        System.out.println("Degrees: " + ahrs.getYaw());
 
+        if (turnController.atSetpoint()) {
+            return Robot.DONE;
+        }
+        else {
+            return Robot.CONT;
+        }
     }
 
+    public void zeroYaw() {
+        ahrs.zeroYaw();
+    }
 
     // Test functions
     public void testLeftSide(double leftPower) {

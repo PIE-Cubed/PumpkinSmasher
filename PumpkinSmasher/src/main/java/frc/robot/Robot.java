@@ -56,6 +56,8 @@ public class Robot extends TimedRobot {
     drive = new Drive();
     pneumatics = new Pneumatics();
     auto = new Auto();
+
+    drive.zeroYaw();
   }
 
   /**
